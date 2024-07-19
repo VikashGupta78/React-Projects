@@ -1,4 +1,3 @@
-import './App.css';
 import Blog from './components/Blog';
 import Pagination from './components/Pagination';
 
