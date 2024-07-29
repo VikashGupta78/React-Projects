@@ -1,5 +1,6 @@
 import { createContext, useState, useEffect } from "react";
 import {baseUrl} from '../baseUrl';
+import { useNavigate } from "react-router-dom";
 
 export const appContext = createContext();
 
@@ -8,11 +9,18 @@ export function AppContextProvider({children}){
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(null);
     const [posts, setPosts] = useState([]);
+    const navigate = useNavigate();
 
 
-    const fetchBlogPosts = async(page = 1) => {
+    const fetchBlogPosts = async(page = 1, tag = null, category) => {
         setLoading(true);
-        const url = `${baseUrl}?page=${page}`
+        let url = `${baseUrl}?page=${page}`
+        if(tag){
+            url += `&tag=${tag}`
+        }
+        if(category){
+            url += `&category=${category}`
+        }
         // console.log("final url: ", url);
         try {
             const response = await fetch(url);
@@ -31,13 +39,13 @@ export function AppContextProvider({children}){
         setLoading(false);
     }
 
-    useEffect(()=>{
-        fetchBlogPosts();
-    },[])
+    // useEffect(()=>{
+    //     fetchBlogPosts();
+    // },[])
 
     const pageChangeHandler = (page) => {
+        navigate({search: `?page=${page}`});
         setPage(page);
-        fetchBlogPosts(page);
     }
 
     const value = {
